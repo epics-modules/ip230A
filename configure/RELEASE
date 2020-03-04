@@ -1,0 +1,25 @@
+#RELEASE Location of external products
+# Run "gnumake clean uninstall install" in the application
+# top directory each time this file is changed.
+
+TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
+
+# If you don't want to install into $(TOP) then
+# define INSTALL_LOCATION_APP here
+#INSTALL_LOCATION_APP=<fullpathname>
+
+SUPPORT=/APSshare/epics/synApps_6_1/support
+-include $(TOP)/../configure/SUPPORT.$(EPICS_HOST_ARCH)
+
+ASYN=$(SUPPORT)/asyn-R4-36
+
+IPAC=$(SUPPORT)/ipac-2-15
+
+# EPICS_BASE usually appears last so other apps can override stuff:
+EPICS_BASE=/APSshare/epics/base-3.15.6
+-include $(TOP)/../configure/EPICS_BASE.$(EPICS_HOST_ARCH)
+
+#Capfast users may need the following definitions
+#CAPFAST_TEMPLATES=
+#SCH2EDIF_PATH=
+
