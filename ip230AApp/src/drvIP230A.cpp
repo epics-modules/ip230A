@@ -78,10 +78,10 @@ asynStatus IP230A::writeInt32(asynUser *pasynUser, epicsInt32 value)
     if(value<0 || value>this->maxValue || channel<0 || channel>this->lastChan)
         return(asynError);
     setIntegerParam(channel, IP230A_Data, value);
-    /* DAC channels at 0x10 offset from base address */
-    this->regs[0x10 + channel] = value;
+    /* DAC channels at 0x8 offset from base address */
+    this->regs[0x8 + channel] = value;
     /* write to the Start Convert bit to initialize d-a conversion  */
-    this->regs[0x0E] = 0x0001;
+    this->regs[0x7] = 0x0001;
     asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, 
               "%s:%s, port %s, wrote %d to channel %d\n",
               driverName, functionName, this->portName, value, channel);
