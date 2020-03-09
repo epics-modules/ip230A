@@ -34,6 +34,7 @@ protected:
 private:
     int lastChan;
     int maxValue;
+    int minValue;
     volatile unsigned short* regs;    
 };
 
@@ -64,7 +65,10 @@ IP230A::IP230A(const char *portName, int carrier, int slot)
     /* lastChan and maxValue could be set by looking at "model" in the future
      * if models with more channels or more bits are available */
     this->lastChan = 7;
-    this->maxValue = 65535;
+   /*  IP230A module uses binary 2's complement codes for bipolar voltage output
+    *  thus requires min value */
+    this->maxValue = 32767;
+    this->minValue = -32768;
    /* enable single conversion for IP230A DAC Module */
    this->regs[0] = 0x0100;
 }
@@ -75,7 +79,7 @@ asynStatus IP230A::writeInt32(asynUser *pasynUser, epicsInt32 value)
     static const char *functionName = "writeInt32";
 
     this->getAddress(pasynUser, &channel);
-    if(value<0 || value>this->maxValue || channel<0 || channel>this->lastChan)
+    if(value<minValue || value>this->maxValue || channel<0 || channel>this->lastChan)
         return(asynError);
     setIntegerParam(channel, IP230A_Data, value);
     /* DAC channels at 0x8 offset from base address */
@@ -90,7 +94,7 @@ asynStatus IP230A::writeInt32(asynUser *pasynUser, epicsInt32 value)
 
 asynStatus IP230A::getBounds(asynUser *pasynUser, epicsInt32 *low, epicsInt32 *high)
 {
-    *low = 0;
+    *low = this->minValue;
     *high = this->maxValue;
     return(asynSuccess);
 }
@@ -130,8 +134,8 @@ void IP230A::report(FILE *fp, int details)
     asynPortDriver::report(fp, details);
     fprintf(fp, "  Port: %s, address %p\n", this->portName, this->regs);
     if (details >= 1) {
-        fprintf(fp, "  lastChan=%d, maxValue=%d\n", 
-                this->lastChan, this->maxValue);
+        fprintf(fp, "  lastChan=%d, maxValue=%d, minValue=%d\n", 
+                this->lastChan, this->maxValue, this->minValue);
     }
 }
 

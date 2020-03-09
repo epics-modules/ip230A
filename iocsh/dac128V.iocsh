@@ -23,6 +23,6 @@
 #- portName  = name to give this asyn port
 #- carrier     = IPAC carrier number (0, 1, etc.)
 #- slot        = IPAC slot (0,1,2,3, etc.)
-initDAC128V("$(PORT=DAC$(CARRIER=0)$(SLOT=0))", $(CARRIER=0), $(SLOT=0))
+initDAC128V("$(PORT=DAC$(CARRIER=0)$(SLOT=1))", $(CARRIER=0), $(SLOT=1))
 
-dbLoadTemplate("$(SUB=$(DAC128V)/iocsh/EXAMPLE_dac128V.substitutions)", "P=$(PREFIX), D=$(SLOT), PORT=$(PORT=DAC$(CARRIER=0)$(SLOT=0))")
+dbLoadTemplate("$(SUB=$(DAC128V)/iocsh/EXAMPLE_dac128V.substitutions)", "P=$(PREFIX), D=$(SLOT=1), PORT=$(PORT=DAC$(CARRIER=0)$(SLOT=1))")
